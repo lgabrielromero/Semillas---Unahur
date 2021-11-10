@@ -1,0 +1,144 @@
+import Plantas.*
+import Parcelas.*
+import INTA.*
+
+describe "tests"{
+	
+	//instancias
+	const menta1 = new Menta(altura = 1, anioObtencion = 2008)
+	const soja = new Soja(altura = 0.6, anioObtencion = 2009)
+	const quinoa1 = new Quinoa(altura = 1.0, anioObtencion = 2010)
+	const hierbaBuena = new Hierbabuena(altura = 1, anioObtencion = 2007)
+	const sojaTrans = new SojaTransgenica(altura = 1.3, anioObtencion = 2005)
+	const menta2 = new Menta(altura = 0.3, anioObtencion = 2008)
+	const quinoa2 = new Quinoa(altura = 1.0, anioObtencion = 2001)
+	const soja2 = new Soja(altura = 1.5, anioObtencion = 2011)
+	const parcela = new Parcela(ancho = 20, largo = 1,horasDeSol = 8)
+	const parcela2 = new Parcela(ancho = 5, largo = 1, horasDeSol = 9)
+	const parcelaEcologista2 = new ParcelaEcologista(ancho = 120, largo = 11, horasDeSol = 10)
+	const parcelaEcologista = new ParcelaEcologista(ancho = 20, largo = 1,horasDeSol = 8)
+	const parcelaIndustrial = new ParcelaIndustrial(ancho = 20, largo = 1,horasDeSol = 8)
+	
+	
+	method initialize(){
+		
+		quinoa1.toleranciaAlSol(12)
+		quinoa2.toleranciaAlSol(9)
+		parcela.plantar(soja2)
+		parcela.plantar(soja2)
+		parcela.plantar(soja2)
+		parcela.plantar(soja2)
+		parcelaEcologista.plantar(soja2)
+		parcelaEcologista.plantar(soja2)
+		parcelaEcologista.plantar(soja2)
+		parcelaEcologista.plantar(soja2)
+		parcelaIndustrial.plantar(quinoa1)
+		parcelaEcologista2.plantar(soja2)
+		parcelaEcologista2.plantar(soja2)
+		parcelaEcologista2.plantar(soja2)
+		parcelaEcologista2.plantar(soja2)
+		parcelaEcologista2.plantar(soja2)
+		inta.agregarParcela(parcela)
+		inta.agregarParcela(parcela2)
+		inta.agregarParcela(parcelaEcologista2)
+		inta.agregarParcela(parcelaEcologista)
+		inta.agregarParcela(parcelaIndustrial)
+	}
+	
+	test "menta1 da semillas"{
+		assert.that(menta1.daNuevasSemillas())
+	}
+	
+	test "menta2 ocupa espacio"{
+		assert.equals(0.9, menta2.espacioOcupaPlantada())
+	}
+	
+	test "soja tolera sol"{
+		assert.equals(7, soja.toleranciaAlSol())
+	}
+	
+	test "soja no da semillas"{
+		assert.notThat(soja.daNuevasSemillas())
+	}
+	
+	test "soja ocupa espacio"{
+		assert.equals(0.3, soja.espacioOcupaPlantada())
+	}
+	
+	test "quinoa1 da semillas"{
+		assert.that(quinoa1.daNuevasSemillas())
+	}
+	
+	test "quinoa2 tambien da semillas"{
+		assert.that(quinoa2.daNuevasSemillas())
+	}
+	
+	test "sojaTrans no da semillas"{
+		assert.notThat(sojaTrans.daNuevasSemillas())
+	}
+
+	test "hierbaBuena ocupa el doble de espacio de la menta1"{
+		assert.equals(6, hierbaBuena.espacioOcupaPlantada())
+	}
+	
+	test "quinoa1 es fuerte"{
+		assert.that(quinoa1.esFuerte())
+	}
+	
+	test "quinoa2 no es fuerte"{
+		assert.notThat(quinoa2.esFuerte())
+	}
+	
+	test "parcela superficie"{
+		assert.equals(20 ,parcela.superficie())
+	}
+	
+	test "parcela max plantas"{
+		assert.equals(4, parcela.maximoPlantas())
+	}
+	
+	test "parcela no tiene complicaciones"{
+		assert.notThat(parcela.tieneComplicaciones())
+	}
+	
+	test "parcela no puede agregar mas"{
+		assert.throwsExceptionWithMessage('No se puede plantar', parcelaEcologista.plantar(soja))
+	}
+	
+	test "parcela le gusta a la menta"{
+		assert.that(menta1.parcelaEsIdeal(parcela))
+	}
+	
+	test "parcela le gusta a la hierbaBuena"{
+		assert.that(hierbaBuena.parcelaEsIdeal(parcela))
+	}
+	
+	test "quinoa no le gusta la parcela"{
+		assert.that(quinoa1.parcelaEsIdeal(parcela))
+	}
+	
+	test "soja le gusta parcela2"{
+		assert.that(soja2.parcelaEsIdeal(parcela2))
+	}
+	
+	test "sojaTrans le gusta parcela2"{
+		assert.that(sojaTrans.parcelaEsIdeal(parcela2))
+	}
+	
+	test "hierbaBuena se asocia bien con parcela ecologista"{
+		assert.that(parcelaEcologista.plantaSeAsocia(hierbaBuena))
+	}
+	
+	test "quinoa1 se asocia bien con parcela industrial"{
+		assert.that(parcelaIndustrial.plantaSeAsocia(quinoa1))
+	}
+	
+	test "INTA promedio de plantas"{
+		assert.equals(2.8, inta.promedioPlantasXParcela())
+	}
+	
+	test "INTA parcela mas sustentable"{
+		assert.equals(parcelaEcologista2, inta.parcelaMasAutosustentable())
+	}
+	
+}
